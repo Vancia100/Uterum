@@ -1,9 +1,11 @@
 import time
 import threading
 import Thermometer
+import GPIO
 
-#GPIO.cleanupp()
-#GPIO.setmode(GPIO.BCM)
+#GPIO skit till RPi
+GPIO.cleanupp()
+GPIO.setmode(GPIO.BCM)
 
 #Sätter läget på GPIO pint till att räkna pin numer som BCM, Vilket man behöver googla upp.
 
@@ -27,6 +29,12 @@ TruefalsePin = 20
 #Temporära grejer som ska bytas ut med riktiga prompts:
 ButtonPress = False
 ButtonPress2 = False
+
+def TurnOnAuto():
+        T2.start()
+
+
+
 
 #Detta är en funktion som faktiskt kontrollerar fläktarna
 #Den krävar att man faktiskt  sätter upp de olika GPIO pinsen och PWM på denna pin!
@@ -68,16 +76,32 @@ def Buttons():
 
 #Detta är det huvudsakliga skriptet som ser till att fläktarna kör och att de gör det i rätt hastighet
 
+
+
 def FanAutoSys():
         while True:
                 if FanAuto == True and not(Toltemp[0] <= Innetemp <= Toltemp[1]) and ((Innetemp > Utetemp and Innetemp > Toltemp[1]) or (Innetemp > Utetemp and Innetemp < Toltemp[0])):
-                        UteTemp = Thermometer.Readtemp()
-                        IneTemp = Thermometer.Readtemp2()
+                        UteTemp = Thermometer.read_temp()
+                        IneTemp = Thermometer.read_temp2()
                         Fan(round(Agrev*abs(Innetemp-(sum(Toltemp)/2))/(abs(Innetemp-Utetemp)*(1/Dif+1))))
                         time.sleep(1)
 
+                elif FanAuto == False:
+                        Break
                 else:
                         time.sleep(1)
+
+
+
+# Denna del är till för ett eventuellt fungerande system där man ska se till att knapparna inte är intryckta.
+def CheckFan(what):
+        if what == "Auto":
+                return(FanAuto)
+        elif what == "On":
+                return (FanOn)
+        else:
+                return('Must be "Auto" or "On"')
+ 
 
 #Denna del är det som faktiskt kommer att göra någonting:
 #öppnar en thread på de olika funktionerna
@@ -86,4 +110,3 @@ T1 = threading.Thread(target=Buttons)
 T2 = threading.Thread(target=FanAutoSys)
 
 T1.start()
-T2.start()

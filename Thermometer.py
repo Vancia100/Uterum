@@ -1,4 +1,3 @@
-from cgitb import text
 import time
 import os
 import glob
@@ -43,6 +42,3 @@ def read_temp2():
                 temp__string2 =lines[1][equal_pos+2:]
                 return float(temp__string2)/1000
 
-
-
-print(read_temp2())
