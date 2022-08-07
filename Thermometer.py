@@ -42,3 +42,16 @@ def read_temp2():
                 temp__string2 =lines[1][equal_pos+2:]
                 return float(temp__string2)/1000
 
+
+def main():
+        while True:
+                print(read_temp())
+                print(read_temp2())
+                time.sleep(1)
+
+
+#This is not the main script but just a way of testing if the thermometer is working properly.
+#If you want to test the thermometer lanch this script, otherwise this code will lay dormant.
+if __name__ == "__main__":
+        main()
+
