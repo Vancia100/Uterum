@@ -4,6 +4,8 @@ import time
 
 PINnr = []
 
+def BCM():
+    return("BCM")
 def BOARD():
     return("Board")
 def cleanupp():
@@ -19,7 +21,7 @@ def OUT():
 def IN():
     return("IN")
 def PWM():
-    return("PWM")
+    print("PWM")
 def HIGH():
     return("HIGH")
 def LOW():

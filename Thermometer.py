@@ -4,7 +4,7 @@ import glob
 import threading
 #Detta skript behöver en variabel där man skriver in de olika variablarna för thermometer utdatan. Dessutom behöver man klona "read_temp_raw för att gära att den äver fungerar med temp 2
 
-base_dir = "/sys/bus/w1/devices"
+base_dir = "/sys/bus/w1/devices" #Detta är var filerna för 1w protokollet kommer att sparas. Updatera efter behag. Just nu används en temporär fil i mappen som endast är till för demonstaration.
 
 def read_temp_raw():
         text = open("Thermo1.txt")
