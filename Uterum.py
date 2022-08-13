@@ -3,19 +3,13 @@ import threading
 import Thermometer
 import GPIO
 
-#GPIO skit till RPi
 
+Toltemp = 20, 22 #Mellan dessa 2 värden är där man försöker att hålla temperaturen, där fläktarna inte kommer att köra.
+Agrev = 25 #är skilnaden i tempreatur mellan när man ska köra 100% och 20%.
+Dif = 20  #är skilnaden i temperatur mellan inne och ute som behövs för att fläktarna ska gå hälften så långsamt, är för närvarande inte implementerat.
 
-#Sätter läget på GPIO pint till att räkna pin numer som BCM, Vilket man behöver googla upp.
-
-#De variablar som vi kommer att behöva för att räkna ut temperaturerna och fläktarnas värde
-Toltemp = 20, 22
-Agrev = 25
-Dif = 20 
-#Dif är skilnaden i temperatur mellan inne och ute som behövs för att fläktarna ska gå hälften så långsamt
-
-FanAuto = True
-FanOn = True
+FanAuto = False
+FanOn = False
 
 def Fan(hastighet):
         if hastighet > 100:
@@ -27,36 +21,44 @@ def Fan(hastighet):
         #Funktion för att sätta fläkthastigheten
 
 def Buttons():
-        global FanAuto, FanOn
         while True:
                 if GPIO.Button == True:
-                        if FanAuto == True:
-                                FanAuto = False
-                                if FanOn == True:
-                                        Fan(100)
-                                else:
-                                        Fan(0)
-                        elif FanAuto == False:
-                                FanAuto == True
-                                StartAuto()
+                        FanOnChange()
                         while GPIO.Button == True:
                                 time.sleep(0.5)
 
-                if GPIO.Button2 == True and FanAuto == False:
-                        if FanOn == False:
-                                FanOn = True
-                                Fan(100)
-                        if FanOn == True:
-                                FanOn = True
-                                Fan(0)
+                elif GPIO.Button2 == True and FanAuto == False:
+                        FanAutoChange()
                         while GPIO.Button2 == True:
                                 time.sleep(0.5)
-                time.sleep(1)
-
+                else:
+                        time.sleep(0.2)
+def FanAutoChange():
+        global FanAuto
+        if FanAuto == True:
+                FanAuto = False
+                if FanOn == True:
+                        Fan(100)
+                else:
+                        Fan(0)
+        elif FanAuto == False:
+                FanAuto == True
+                StartAuto()
+#Dessa funktioner kan bli kallade från ett potentiellt annat script där man då kan ändra dessa.
+def FanOnChange():
+        global FanOn
+        if FanOn == False:
+                FanOn = True
+                Fan(100)
+        if FanOn == True:
+                FanOn = True
+                Fan(0)
+def CheckFan():
+        global FanAuto, FanOn
+        return(FanAuto, FanOn)
 
 def FanAutoSys():
         while True:
-                print("This is also on")
                 UteTemp = Thermometer.read_temp()
                 IneTemp = Thermometer.read_temp2()
                 if not(Toltemp[0] <= IneTemp <= Toltemp[1]) and ((IneTemp > UteTemp and IneTemp > Toltemp[1]) or (IneTemp > UteTemp and IneTemp < Toltemp[0])):
@@ -65,22 +67,19 @@ def FanAutoSys():
                 else:
                         time.sleep(1)
                 if FanAuto == False:
-                        pass
-                        #break
-                
+                        break
 
-
-#Denna del är det som faktiskt kommer att göra någonting:
-#öppnar en thread på de olika funktionerna
 def StartAuto():
         T2 = threading.Thread(target=FanAutoSys)
-        T2.start()
-        T2.join()
+        T2.start()           
 
 
-if __name__ == "__main__":
+#Det som står under main är det som kommer få den att göra coola saker.
+def main():
         GPIO.cleanupp()
         GPIO.setmode(GPIO.BCM)
         T1 = threading.Thread(target=Buttons)
         T1.start()
         StartAuto()
+if __name__ == "__main__":
+        main()
