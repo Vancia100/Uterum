@@ -20,19 +20,7 @@ def Fan(hastighet):
                 GPIO.PWM(hastighet)
         #Funktion för att sätta fläkthastigheten
 
-def Buttons():
-        while True:
-                if GPIO.Button == True:
-                        FanOnChange()
-                        while GPIO.Button == True:
-                                time.sleep(0.5)
 
-                elif GPIO.Button2 == True and FanAuto == False:
-                        FanAutoChange()
-                        while GPIO.Button2 == True:
-                                time.sleep(0.5)
-                else:
-                        time.sleep(0.2)
 def FanAutoChange():
         global FanAuto
         if FanAuto == True:
@@ -53,6 +41,21 @@ def FanOnChange():
         if FanOn == True:
                 FanOn = True
                 Fan(0)
+def Buttons():
+        print("the buttons are now enabled!")
+        while True:
+                if GPIO.Button == True:
+                        FanOnChange()
+                        while GPIO.Button == True:
+                                time.sleep(0.5)
+
+                elif GPIO.Button2 == True and FanAuto == False:
+                        FanAutoChange()
+                        while GPIO.Button2 == True:
+                                time.sleep(0.5)
+                else:
+                        time.sleep(0.2)
+
 def CheckFan():
         global FanAuto, FanOn
         return(FanAuto, FanOn)
