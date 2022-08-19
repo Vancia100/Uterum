@@ -2,9 +2,10 @@ import time
 import os
 import glob
 import threading
-#Detta skript behöver en variabel där man skriver in de olika variablarna för thermometer utdatan. Dessutom behöver man klona "read_temp_raw för att gära att den äver fungerar med temp 2
 
-base_dir = "/sys/bus/w1/devices" #Detta är var filerna för 1w protokollet kommer att sparas. Updatera efter behag. Just nu används en temporär fil i mappen som endast är till för demonstaration.
+base_dir = "/sys/bus/w1/devices" #Where you find the files for 1w on RPI.
+#Update as needed.
+#TODO Update the text= so it opens the real files.
 
 def read_temp_raw():
         text = open("Thermo1.txt")
@@ -39,19 +40,18 @@ def read_temp2():
                 lines = read_temp_raw2
         equal_pos = lines[1].find("t=")
         if equal_pos != -1:
-                temp__string2 =lines[1][equal_pos+2:]
-                return float(temp__string2)/1000
+                temp__string =lines[1][equal_pos+2:]
+                return float(temp__string)/1000
 
-
-def main():
-        while True:
-                print(read_temp())
-                print(read_temp2())
-                time.sleep(1)
 
 
 #This is not the main script but just a way of testing if the thermometer is working properly.
 #If you want to test the thermometer lanch this script, otherwise this code will lay dormant.
+def main():
+        while True:
+            print(read_temp())
+            print(read_temp2())
+            time.sleep(1)
 if __name__ == "__main__":
         main()
 

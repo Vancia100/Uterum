@@ -1,26 +1,34 @@
+#TODO implement a actualy good fan speed curve, perhaps PID
+#TODO add correct PWM syntax
+#TODO implemt that the buttons have different Default fan Setting.
+#TODO cleanup FanAutoChange, Arrange Arguments, Custom fan speed.
+
+
 import time
 import threading
 import Thermometer
-import GPIO
+import GPIO #fake to make it not spit out errors when testing
+#import RPi.GPIO as GPIO #real script
 
 
-Toltemp = 20, 22 #Mellan dessa 2 värden är där man försöker att hålla temperaturen, där fläktarna inte kommer att köra.
-Agrev = 25 #är skilnaden i tempreatur mellan när man ska köra 100% och 20%.
-Dif = 20  #är skilnaden i temperatur mellan inne och ute som behövs för att fläktarna ska gå hälften så långsamt, är för närvarande inte implementerat.
+Toltemp = 20, 22 #The tolerable temperatures.
+Agrev = 25 #How agresive the fan curve is
+Dif = 20  #How agresivly the fan curve dips when huge difference in temp outide and inside unsure if this is final.
+
 
 FanAuto = False
 FanOn = False
 
 def Fan(hastighet):
         if hastighet > 100:
-                GPIO.PWM(100) #Kommer ej ihåg om det här är det faktiskt skriptet.
+                GPIO.PWM(100) #TODO add in the correct PWM syntax
         elif  hastighet > 20:
                 GPIO.PWM(20)
         else:
-                GPIO.PWM(hastighet)
-        #Funktion för att sätta fläkthastigheten
+                GPIO.PWM(hastighet)      
 
 
+#These functions can be called from outside the program to change the values.
 def FanAutoChange():
         global FanAuto
         if FanAuto == True:
@@ -32,7 +40,6 @@ def FanAutoChange():
         elif FanAuto == False:
                 FanAuto == True
                 StartAuto()
-#Dessa funktioner kan bli kallade från ett potentiellt annat script där man då kan ändra dessa.
 def FanOnChange():
         global FanOn
         if FanOn == False:
@@ -41,6 +48,12 @@ def FanOnChange():
         if FanOn == True:
                 FanOn = True
                 Fan(0)
+
+def CheckFan():
+        global FanAuto, FanOn
+        return(FanAuto, FanOn)
+
+
 def Buttons():
         print("the buttons are now enabled!")
         while True:
@@ -56,9 +69,10 @@ def Buttons():
                 else:
                         time.sleep(0.2)
 
-def CheckFan():
-        global FanAuto, FanOn
-        return(FanAuto, FanOn)
+
+def StartAuto():
+        T2 = threading.Thread(target=FanAutoSys)
+        T2.start()           
 
 def FanAutoSys():
         while True:
@@ -72,12 +86,7 @@ def FanAutoSys():
                 if FanAuto == False:
                         break
 
-def StartAuto():
-        T2 = threading.Thread(target=FanAutoSys)
-        T2.start()           
 
-
-#Det som står under main är det som kommer få den att göra coola saker.
 def main():
         GPIO.cleanupp()
         GPIO.setmode(GPIO.BCM)
