@@ -1,43 +1,47 @@
-from pickle import APPEND
-from statistics import mode
-import time
+PINnr = {}
 
-PINnr = []
+def CheckBackGround(Dictionary, Mode):
+    if PINnr.get(Dictionary[0]) == Mode:
+        return True
+    else:
+        return False
 
+#simple setup finctions
 def BCM():
     return("BCM")
 def BOARD():
-    return("Board")
-def cleanupp():
-    print("CleanupComplete!")
+    return("BOARD")
+def cleanup():
+    print("Cleanup Complete!")
+    PINnr = {}
 def setmode(Mode):
-    print("Rpi är nu i " + str(Mode) + " läget")
-def setup(Pin, Mode):
-    print(f'pin nr:{Pin} is set up in {Mode} mode.')
-    PINnr.append(Pin, Mode)
+    print("Rpi is now in " + str(Mode) + " mode")
 
+#Setup a pin to a value:
+def setup(Pin, Mode, Value = None):
+    if Value != None:
+        print(f'pin nr:{Pin} is set up in {Mode} mode and has the value {Value}')
+        PINnr[Pin] = [Mode, Value]
+    else:
+        print(f'pin nr:{Pin} is set up in {Mode} mode.')
+        PINnr[Pin] = [Mode]
+#The posible values:
 def OUT():
     return("OUT")
 def IN():
     return("IN")
-def PWM():
-    print("PWM")
+
 def HIGH():
     return("HIGH")
 def LOW():
     return("LOW")
 
+"""
+Some sample code from actual code.
 
-def output(Pin, HiLo):
-    if (Pin, "OUT") in PINnr:
-        print(f'Outputting {HiLo} on pin {Pin}')
-    else:
-        print("Pin not setup correctly")
+GPIO.cleanup()
+GPIO.setmode(BCM)
+GPIO.setmode(BOARD)
 
-
-
-def Button():
-    return(bool(input("is the button pressed? (True or False)")))
-
-def Button2():
-    return(bool(input("is the button pressed? (True or False)")))
+GPIO.setup(18,OUT, HIGH) TODO Look up how this syntax actualy looks and implemnt it accordingly.
+"""
