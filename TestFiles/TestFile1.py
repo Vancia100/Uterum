@@ -14,17 +14,31 @@ Language = True #True for Exponetion false for linnear
 #        return(float(TestFile2.readLinnear()))
 
 def PID():
-    while True:
+    Temp1 = getValue()
+    if Temp1 != None:
+        TempTime.append(Temp1)
+        if len(TempTime) > 60:
+            TempTime.remove(TempTime[0])
+        return(f'{TempTime} \n{round(Temp1 - sum(TempTime)/len(TempTime), 3)}')
+        #print(TempTime)
+        #print(round(Temp1 - sum(TempTime)/len(TempTime), 2))
+
+def TestPID():
+    Test = []
+    for i in range(0,60):
         Temp1 = getValue()
         if Temp1 != None:
             TempTime.append(Temp1)
             if len(TempTime) > 60:
                 TempTime.remove(TempTime[0])
-            print(TempTime)
-            print(round(Temp1 - sum(TempTime)/len(TempTime), 2))
-        sleep(2)
+            Test.append(round(Temp1-sum(TempTime)/len(TempTime),3))
+    print(Test)
 
 def main():
-    PID()
+    while True:
+        print(PID())
+        sleep(0.8)
 if __name__ == "__main__":
-    (main())
+    pass
+    #(main())
+    TestPID()

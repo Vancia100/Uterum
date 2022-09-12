@@ -15,7 +15,7 @@ def readTemp():
         return(None)
     else:
         Instance += 0.05
-        return(float(round( Start*(Expo+1)**(Instance/4), 2)))
+        return(float(round( Start*(Expo+1)**(Instance/8), 2)))
 
 def readLinnear():
     global Instance, Start, Expo
