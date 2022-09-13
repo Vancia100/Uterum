@@ -1,3 +1,4 @@
+from tempfile import tempdir
 from time import sleep
 #import TestFile2
 from TestFile2 import readTemp as getValue # does not work with readLinnear
@@ -17,21 +18,23 @@ def PID():
     Temp1 = getValue()
     if Temp1 != None:
         TempTime.append(Temp1)
-        if len(TempTime) > 60:
+        if len(TempTime) > 120:
             TempTime.remove(TempTime[0])
         return(f'{TempTime} \n{round(Temp1 - sum(TempTime)/len(TempTime), 3)}')
         #print(TempTime)
         #print(round(Temp1 - sum(TempTime)/len(TempTime), 2))
 
-def TestPID():
+def TestPID(X):
     Test = []
-    for i in range(0,60):
+    while len(TempTime) < 60:
         Temp1 = getValue()
         if Temp1 != None:
             TempTime.append(Temp1)
-            if len(TempTime) > 60:
-                TempTime.remove(TempTime[0])
-            Test.append(round(Temp1-sum(TempTime)/len(TempTime),3))
+    for _ in range(0,X):
+        Temp1 = getValue()
+        TempTime.append(Temp1)
+        TempTime.remove(TempTime[0])
+        Test.append(round(Temp1-sum(TempTime)/len(TempTime),3))
     print(Test)
 
 def main():
@@ -41,4 +44,4 @@ def main():
 if __name__ == "__main__":
     pass
     #(main())
-    TestPID()
+    TestPID(int(input("Wright the number of tries to test: ")))
