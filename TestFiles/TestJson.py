@@ -1,5 +1,4 @@
 import json
-from tkinter.ttk import Separator
 
 def FileRaw(Value = None):
     with open("TestFiles/Jim.json", "r+") as fake:
@@ -11,17 +10,30 @@ def FileRaw(Value = None):
 
 def main():
     Inp = input("Skirv in värde:")
-    yes = FileRaw()
+    Jim = FileRaw()
     if not(Inp):
-        print(yes)
+        for item in Jim:
+            try:
+                for thing in item:
+                    print(item,":",item[thing])
+            except TypeError:
+                print("this on error")
+                print(item,":", Jim[item])
     else:
         try:
-            print(yes[Inp])
+            for thing in Jim[Inp]:
+                print(thing, Jim[Inp][thing])
+            InputNew = input("skriv in om du vill lägga till yterligare ett sökvärde: ")
+            if InputNew:
+                Jim[Inp] = {InputNew:input(f"Skriv in det nya värdet för värdet {InputNew}: ")}
         except KeyError:
-            yes[Inp] = (input(f"Nytt sökvärde skriv skriv nytt värde för {Inp}: "))
-            FileRaw(yes)
+            val = input(f"Nytt sökvärde skriv skriv nytt sökvärde för {Inp}: ")
+            if val:
+                Jim[Inp] = {val:input(f"Skriv värdet för {val}: ")}
+                FileRaw(Jim)
+        except TypeError:
+            print(Jim[Inp])
 
 if __name__ == "__main__":
-    pass
-    main()
-    #test()
+    while True:
+        main()

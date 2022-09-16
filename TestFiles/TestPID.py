@@ -1,4 +1,3 @@
-from tempfile import tempdir
 from time import sleep
 #import TestFile2
 from TestGraphs import readTemp as getValue # does not work with readLinnear
