@@ -1,4 +1,4 @@
-#TODO implement a actualy good fan speed curve, perhaps PID
+#TODO implement a actualy good fan speed curve, perhaps some form of PID
 #TODO add correct PWM syntax
 #TODO implemt that the buttons have different Default fan Setting.
 #TODO cleanup FanAutoChange, Arrange Arguments, Custom fan speed.
@@ -12,7 +12,7 @@ import GPIO #fake to make it not spit out errors when testing
 
 
 Toltemp = 20, 22 #The tolerable temperatures.
-Agrev = 25 #How agresive the fan curve is
+Agrev = 25 #How agresive the fan curve is don't know how to implement.
 Dif = 20  #How agresivly the fan curve dips when huge difference in temp outide and inside unsure if this is final.
 
 
@@ -75,7 +75,7 @@ def StartAuto():
         T2.start()           
 
 def FanAutoSys():
-        while True:
+        while FanAuto:
                 UteTemp = Thermometer.read_temp()
                 IneTemp = Thermometer.read_temp2()
                 if not(Toltemp[0] <= IneTemp <= Toltemp[1]) and ((IneTemp > UteTemp and IneTemp > Toltemp[1]) or (IneTemp > UteTemp and IneTemp < Toltemp[0])):
@@ -83,8 +83,6 @@ def FanAutoSys():
                         time.sleep(1)
                 else:
                         time.sleep(1)
-                if FanAuto == False:
-                        break
 
 
 def main():
