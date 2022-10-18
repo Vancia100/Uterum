@@ -1,0 +1,23 @@
+{
+  "Squats": {
+    "Pr": 100.0,
+    "Rep5": 90.0,
+    "Rep8": 80.0,
+    "Rep12": 75.0,
+    "MaxRep": 400.0
+  },
+  "Benkpress": {
+    "Pr": 70.0,
+    "Rep5": 60.0,
+    "Rep8": 55.0,
+    "Rep12": 50.0,
+    "MaxRep": null
+  },
+  "BenPress": {
+    "Pr": null,
+    "Rep5": null,
+    "Rep8": 170.0,
+    "Rep12": 160.0,
+    "MaxRep": null
+  }
+}
