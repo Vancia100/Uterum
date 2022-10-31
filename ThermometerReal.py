@@ -1,7 +1,4 @@
 import time
-import os
-import glob
-import threading
 
 base_dir = "/sys/bus/w1/devices" #Where you find the files for 1w on RPI.
 #Update as needed.
@@ -15,7 +12,7 @@ def read_temp_raw():
 
 
 def read_temp_raw2():
-        text = open("Thermo2.txt")
+        text = open(base_dir+"/28-3cc1f6496b80")
         lines = text.readlines()
         text.close
         return lines
@@ -49,8 +46,8 @@ def read_temp2():
 #If you want to test the thermometer lanch this script, otherwise this code will lay dormant.
 def main():
         while True:
-            print(read_temp())
-            #print(read_temp2())
+            print(round(read_temp(), 1))
+            print(round(read_temp2(), 1))
             time.sleep(1)
 if __name__ == "__main__":
         main()
