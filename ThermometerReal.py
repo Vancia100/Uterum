@@ -5,10 +5,10 @@ import threading
 
 base_dir = "/sys/bus/w1/devices" #Where you find the files for 1w on RPI.
 #Update as needed.
-#TODO Update the text= so it opens the real files.
+#TODO Make 2nd thermometer
 
 def read_temp_raw():
-        text = open("Thermo1.txt")
+        text = open(base_dir+"/28-3c76f648ef1e/w1_slave")
         lines = text.readlines()
         text.close
         return lines
@@ -50,7 +50,7 @@ def read_temp2():
 def main():
         while True:
             print(read_temp())
-            print(read_temp2())
+            #print(read_temp2())
             time.sleep(1)
 if __name__ == "__main__":
         main()
