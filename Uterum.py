@@ -10,10 +10,29 @@ import Thermometer
 import GPIO #fake to make it not spit out errors when testing
 #import RPi.GPIO as GPIO #real script
 
+class PID:
+    def __init__(self, Kp, Ki, Kd, setTemp):
+        self.Kp = Kp
+        self.Ki = Ki
+        self.Kd = Kd
+        self.setTemp = setTemp
 
-Toltemp = 20, 22 #The tolerable temperatures.
-Agrev = 25 #How agresive the fan curve is don't know how to implement.
-Dif = 20  #How agresivly the fan curve dips when huge difference in temp outide and inside unsure if this is final.
+        self.lastValue = 0
+        self.integral = 0
+    
+    def newValue(self, value, seperate):
+        Amount = self.setTemp - value
+        P = self.Kp * Amount
+        self.integral += Amount
+        I = self.Ki * self.integral
+        D = self.Kd * Amount - self.lastValue
+        self.lastValue = Amount
+        if seperate == True:
+            print(P, I, D)
+        return abs(P+I+D)
+    
+    def reset(self):
+        self.integral = 0
 
 
 FanAuto = False
@@ -22,10 +41,33 @@ FanOn = False
 def Fan(hastighet):
         if hastighet > 100:
                 GPIO.PWM(100) #TODO add in the correct PWM syntax
+        elif hastighet >= 0:
+               GPIO.PWM(STOP)
         elif  hastighet > 20:
                 GPIO.PWM(20)
         else:
-                GPIO.PWM(hastighet)      
+                GPIO.PWM(hastighet)
+
+def FanAutoSys():
+        Toltemp = 20
+        timeOut = 40
+        # Kp, Ki, Kd, The dissired temperatur
+        PIDSystem = PID(1,1,1,Toltemp)
+        while FanAuto:
+                UteTemp = Thermometer.read_temp()
+                IneTemp = Thermometer.read_temp2()
+                if ((IneTemp > UteTemp and IneTemp > Toltemp) or (IneTemp < UteTemp and IneTemp < Toltemp)):
+                        
+                        Fan(PIDSystem.newValue(IneTemp)*1)
+                        time.sleep(timeOut)
+                else:
+                        time.sleep(timeOut)
+        PIDSystem.reset()
+
+def StartAuto():
+        T2 = threading.Thread(target=FanAutoSys)
+        T2.start()
+        T2.join()
 
 
 #These functions can be called from outside the program to change the values.
@@ -43,11 +85,10 @@ def FanAutoChange():
 def FanOnChange():
         global FanOn
         if FanOn == False:
-                FanOn = True
                 Fan(100)
         if FanOn == True:
-                FanOn = True
                 Fan(0)
+        FanOn != FanOn
 
 def CheckFan():
         global FanAuto, FanOn
@@ -68,22 +109,6 @@ def Buttons():
                                 time.sleep(0.5)
                 else:
                         time.sleep(0.2)
-
-
-def StartAuto():
-        T2 = threading.Thread(target=FanAutoSys)
-        T2.start()           
-
-def FanAutoSys():
-        while FanAuto:
-                UteTemp = Thermometer.read_temp()
-                IneTemp = Thermometer.read_temp2()
-                if not(Toltemp[0] <= IneTemp <= Toltemp[1]) and ((IneTemp > UteTemp and IneTemp > Toltemp[1]) or (IneTemp > UteTemp and IneTemp < Toltemp[0])):
-                        Fan(round(Agrev*abs(IneTemp-(sum(Toltemp)/2))/(abs(IneTemp-UteTemp)*(1/Dif+1))))
-                        time.sleep(1)
-                else:
-                        time.sleep(1)
-
 
 def main():
         GPIO.cleanupp()

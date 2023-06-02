@@ -1,4 +1,25 @@
 PINnr = {}
+class PWM:
+    global ON
+    global duty_cycle
+    def __init__(self, channel, frequenzy) -> None:
+        self.channel = channel
+        self.frequenzy = frequenzy
+    def start(DC = None):
+        if DC != None:
+            duty_cycle = DC
+        ON = True
+        print(f"Starting with a duty cycle at {duty_cycle} and frequenzy of ?")
+    def ChangeDutyCycle(DC = None):
+        if DC != None:
+            duty_cycle = DC
+            print(f"Duty cycle is now at {DC}")
+    def stop():
+        ON = False
+        print(f"PWM turned of")
+        
+
+
 
 def CheckBackGround(Dictionary, Mode):
     if PINnr.get(Dictionary[0]) == Mode:
